@@ -1,8 +1,9 @@
 "use strict"
-const fs = require('fs')
 
-// Challenge: 
+// CHALLENGE: 
 // Write a function that takes an exit value (in €) as input and outputs the return for each shareholder. 
+
+// Cap Table and Ownership Distribution figures
 
 const ownershipDistribution = {
     'founders' : .3333,
@@ -25,22 +26,16 @@ const capTable = [
     
 ]
 
-function shareholderReturns(exitValue) {
+// for reference:
+// capTable[0] = number of shares
+// capTable[1] = amount invested
 
-    let remainder = exitValue;
-    // pro rata calculations
-    let foundersReturn = remainder * ownershipDistribution.founders;
-    let prefAInvestorsReturn = remainder * ownershipDistribution.prefAInvestors;
-    let prefBInvestorsReturn = remainder * ownershipDistribution.prefBInvestors;
-    let prefCInvestorsReturn = remainder * ownershipDistribution.prefCInvestors;
+// liquidation preference calculations
+const foundersLiqPref = 0;
+const prefAInvestorsLiqPref = capTable[1].prefAInvestorsInvested;
+const prefBInvestorsLiqPref = capTable[1].prefBInvestorsInvested;
+const prefCInvestorsLiqPref = capTable[1].prefCInvestorsInvested;
 
-    console.log('At an exit value of ' + exitValue + ', the returns are:')
-    console.log('Founders return: €', foundersReturn);
-    console.log('Preferred A Investors return: €', prefAInvestorsReturn);
-    console.log('Preferred B Investors return: €', prefBInvestorsReturn);
-    console.log('Preferred C Investors return: €', prefCInvestorsReturn);
-    
-}
 
 // STAGES
 
@@ -51,11 +46,28 @@ function shareholderReturns(exitValue) {
 // Preferred B Investors: €6m
 // Preferred C Investors: €30m
 
-console.log('------------------');
-console.log('Stage 1');
-console.log('------------------');
-shareholderReturns(60000000);
-console.log('\n');
+function shareholderReturns1(exitValue) {
+    
+    // total return calculations
+    const foundersReturn = exitValue * ownershipDistribution.founders;
+    const prefAInvestorsReturn = exitValue * ownershipDistribution.prefAInvestors;
+    const prefBInvestorsReturn = exitValue * ownershipDistribution.prefBInvestors;
+    const prefCInvestorsReturn = exitValue * ownershipDistribution.prefCInvestors;
+    
+    console.log('At an exit value of ' + exitValue + ', the returns are:')
+
+    console.log('Founders return: €', foundersReturn);
+    console.log('Preferred A Investors return: €', prefAInvestorsReturn);
+    console.log('Preferred B Investors return: €', prefBInvestorsReturn);
+    console.log('Preferred C Investors return: €', prefCInvestorsReturn);
+    
+}
+
+// console.log('------------------');
+// console.log('Stage 1');
+// console.log('------------------');
+// shareholderReturns1(60000000);
+// console.log('\n');
 
 
 // Stage 2: Compute the exit distribution at €25m.
@@ -65,10 +77,38 @@ console.log('\n');
 // Preferred B Investors: €2.1m + €0.7m
 // Preferred C Investors: €15m + €3.5m
 
+function shareholderReturns2(exitValue) {
+
+    let remainder;
+
+    // remainder calculation
+    remainder = exitValue - prefAInvestorsLiqPref - prefBInvestorsLiqPref - prefCInvestorsLiqPref;
+
+    // pro rata calculations
+    const foundersProRata = remainder * ownershipDistribution.founders;
+    const prefAInvestorsProRata = remainder * ownershipDistribution.prefAInvestors;
+    const prefBInvestorsProRata = remainder * ownershipDistribution.prefBInvestors;
+    const prefCInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
+
+    // total return calculations
+    const foundersTotalReturn = foundersLiqPref + foundersProRata;
+    const prefAInvestorsTotalReturn = prefAInvestorsLiqPref + prefAInvestorsProRata;
+    const prefBInvestorsTotalReturn = prefBInvestorsLiqPref + prefBInvestorsProRata;
+    const prefCInvestorsTotalReturn = prefCInvestorsLiqPref + prefCInvestorsProRata;
+
+    console.log('At an exit value of ' + exitValue + ', the returns are:')
+
+    console.log('Founders return: €', foundersTotalReturn);
+    console.log('Preferred A Investors return: €', prefAInvestorsTotalReturn);
+    console.log('Preferred B Investors return: €', prefBInvestorsTotalReturn);
+    console.log('Preferred C Investors return: €', prefCInvestorsTotalReturn);
+    
+}
+
 // console.log('------------------');
 // console.log('Stage 2');
 // console.log('------------------');
-// shareholderReturns(25000000);
+// shareholderReturns2(25000000);
 // console.log('\n');
 
 
@@ -80,11 +120,82 @@ console.log('\n');
 // Preferred B Investors: €2.1m + €1.725m (10.71% of €16.1m)
 // Preferred C Investors: €15m + €8.625m (53.57% of €16.1m)
 
-// console.log('------------------');
-// console.log('Stage 3');
-// console.log('------------------');
-// shareholderReturns(35000000);
-// console.log('\n');
+function shareholderReturns3(exitValue) {
+
+    let remainder;
+
+    // remainder calculation
+    remainder = exitValue - prefAInvestorsLiqPref - prefBInvestorsLiqPref - prefCInvestorsLiqPref;
+
+    // pro rata calculations
+    let foundersProRata = remainder * ownershipDistribution.founders;
+    let prefAInvestorsProRata = remainder * ownershipDistribution.prefAInvestors;
+    let prefBInvestorsProRata = remainder * ownershipDistribution.prefBInvestors;
+    let prefCInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
+
+    // total return calculations
+    let foundersTotalReturn = foundersLiqPref + foundersProRata;
+    let prefAInvestorsTotalReturn = prefAInvestorsLiqPref + prefAInvestorsProRata;
+    let prefBInvestorsTotalReturn = prefBInvestorsLiqPref + prefBInvestorsProRata;
+    let prefCInvestorsTotalReturn = prefCInvestorsLiqPref + prefCInvestorsProRata;
+
+    // Now, the cap comes into play.
+    if (prefAInvestorsTotalReturn > (prefAInvestorsLiqPref * 2)) { // Have Series A shares reached cap?
+
+        // give them their cap as total return
+        prefAInvestorsTotalReturn = (prefAInvestorsLiqPref * 2);
+
+        // caluclate the new remainder to distribute among the others pro-rata
+        remainder = exitValue - prefAInvestorsTotalReturn - prefBInvestorsLiqPref - prefCInvestorsLiqPref;
+
+        // new pro rata calculations
+        foundersProRata = remainder * ownershipDistribution.founders;
+        prefBInvestorsProRata = remainder * ownershipDistribution.prefBInvestors;
+        prefCInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
+
+    } else if (prefBInvestorsTotalReturn > (prefBInvestorsLiqPref * 2)) { // Have Series B shares reached cap?
+
+        // give them their cap as total return
+        prefBInvestorsTotalReturn = (prefBInvestorsLiqPref * 2);
+
+        // caluclate the new remainder to distribute among the others pro-rata
+        remainder = exitValue - prefBInvestorsTotalReturn - prefAInvestorsLiqPref - prefCInvestorsLiqPref;;
+
+        // new pro rata calculations
+        foundersProRata = remainder * ownershipDistribution.founders;
+        prefAInvestorsProRata = remainder * ownershipDistribution.prefAInvestors;
+        prefCInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
+
+    } else if (prefCInvestorsTotalReturn > (prefCInvestorsLiqPref * 2)) { // Have Series C shares reached cap?
+        
+        // give them their cap as total return
+        prefCInvestorsTotalReturn = (prefCInvestorsLiqPref * 2);
+
+        // caluclate the new remainder to distribute among the others pro-rata
+        remainder = exitValue - prefCInvestorsTotalReturn - prefAInvestorsLiqPref - prefBInvestorsLiqPref;;
+
+        // new pro rata calculations
+        foundersProRata = remainder * ownershipDistribution.founders;
+        prefAInvestorsProRata = remainder * ownershipDistribution.prefAInvestors;
+        prefBInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
+
+    }
+    
+
+    console.log('At an exit value of ' + exitValue + ', the returns are:')
+
+    console.log('Founders return: €', foundersTotalReturn);
+    console.log('Preferred A Investors return: €', prefAInvestorsTotalReturn);
+    console.log('Preferred B Investors return: €', prefBInvestorsTotalReturn);
+    console.log('Preferred C Investors return: €', prefCInvestorsTotalReturn);
+    
+}
+
+console.log('------------------');
+console.log('Stage 3');
+console.log('------------------');
+shareholderReturns3(35000000);
+console.log('\n');
 
 
 // Stage 4: Compute the exit distribution at €45m.
