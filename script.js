@@ -644,10 +644,6 @@ function shareholderReturns5(exitValue) {
         // give A their cap as total return
         prefAInvestorsTotalReturn = (prefAInvestorsLiqPref * 2);
 
-        if (prefAInvestorsProRata > prefAInvestorsTotalReturn) { // Would A earn more converting to common shares than taking double their preference?
-            console.log('A should convert to common shares which is ' , prefAInvestorsProRata);
-        }
-
         // calculate new amount of shares
         numOfShares = numOfShares - capTable[0].prefAInvestorsShares;
 
@@ -683,7 +679,7 @@ function shareholderReturns5(exitValue) {
 console.log('------------------');
 console.log('Stage 5');
 console.log('------------------');
-shareholderReturns5(60000000);
+shareholderReturns5(45000000);
 // shareholderReturns5(50000000);
 // shareholderReturns5(70000000);
 console.log('\n');
