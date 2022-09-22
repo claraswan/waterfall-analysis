@@ -1,0 +1,163 @@
+------------------
+Stage 1
+------------------
+Exit value: € 60000000
+C reached cap
+Which means B and A also reached cap
+C will convert to common shares
+B will convert to common shares
+A will convert to common shares
+
+
+At an exit value of €60000000, the returns are:
+Founders: € 20000000
+Preferred A Investors: € 4000000
+Preferred B Investors: € 6000000
+Preferred C Investors: € 30000000
+
+
+------------------
+Stage 2
+------------------
+Exit value: € 25000000
+
+
+At an exit value of €25000000, the returns are:
+Founders: € 2333333.333333333
+Preferred A Investors: € 1366666.6666666667
+Preferred B Investors: € 2800000
+Preferred C Investors: € 18500000
+
+
+------------------
+Stage 3
+------------------
+Exit value: € 35000000
+C and B didnt reach cap
+Only A reached cap
+A will stick with 2x their pref since it is more than converting to common and earning  1073333.3333333333
+
+
+At an exit value of €35000000, the returns are:
+Founders: € 5750000
+Preferred A Investors: € 1800000
+Preferred B Investors: € 3825000
+Preferred C Investors: € 23625000
+
+
+------------------
+Stage 4
+------------------
+Exit value: € 45000000
+C didnt reach cap
+B reached cap
+Which means A also reached cap
+B will stick with 2x their pref since it is more than converting to common and earning  3000000
+A will convert to common shares
+
+
+At an exit value of €45000000, the returns are:
+Founders: € 9555555.555555554
+Preferred A Investors: € 1911111.111111111
+Preferred B Investors: € 4200000
+Preferred C Investors: € 29333333.333333336
+
+
+------------------
+Stage 5
+------------------
+Exit value: € 40000000
+C didnt reach cap
+B reached cap
+Which means A also reached cap
+B will stick with 2x their pref since it is more than converting to common and earning  2500000
+A will stick with 2x their pref since it is more than converting to common and earning  1540740.7407407407
+
+
+At an exit value of €40000000, the returns are:
+Founders: € 7600000
+Preferred A Investors: € 1800000
+Preferred B Investors: € 4200000
+Preferred C Investors: € 26400000
+
+
+---
+Exit value: € 50000000
+C reached cap
+Which means B and A also reached cap
+C will stick with 2x their pref since it is more than converting to common and earning  25000000
+B will stick with 2x their pref since it is more than converting to common and earning  2000000
+A will convert to common shares
+
+
+At an exit value of €50000000, the returns are:
+Founders: € 13166666.666666664
+Preferred A Investors: € 2633333.333333333
+Preferred B Investors: € 4200000
+Preferred C Investors: € 30000000
+
+
+---
+Exit value: € 70000000
+C reached cap
+Which means B and A also reached cap
+C will convert to common shares
+B will convert to common shares
+A will convert to common shares
+
+
+At an exit value of €70000000, the returns are:
+Founders: € 23333333.333333336
+Preferred A Investors: € 4666666.666666666
+Preferred B Investors: € 7000000
+Preferred C Investors: € 35000000
+
+
+------------------
+Stage 6
+------------------
+Exit value: € 39000000
+C didnt reach cap
+B reached cap
+Which means A also reached cap
+B will stick with 2x their pref since it is more than converting to common and earning  2400000
+A will stick with 2x their pref since it is more than converting to common and earning  1466666.6666666665
+
+
+At an exit value of €39000000, the returns are:
+Founders: € 7200000
+Preferred A Investors: € 1800000
+Preferred B Investors: € 4200000
+Preferred C Investors: € 25800000
+
+
+---
+Exit value: € 44000000
+C didnt reach cap
+B reached cap
+Which means A also reached cap
+B will stick with 2x their pref since it is more than converting to common and earning  2900000
+A will convert to common shares
+
+
+At an exit value of €44000000, the returns are:
+Founders: € 9185185.185185185
+Preferred A Investors: € 1837037.0370370368
+Preferred B Investors: € 4200000
+Preferred C Investors: € 28777777.777777776
+
+
+---
+Exit value: € 47000000
+C didnt reach cap
+B reached cap
+Which means A also reached cap
+B will stick with 2x their pref since it is more than converting to common and earning  3200000
+A will convert to common shares
+
+
+At an exit value of €47000000, the returns are:
+Founders: € 10296296.296296297
+Preferred A Investors: € 2059259.259259259
+Preferred B Investors: € 4200000
+Preferred C Investors: € 30444444.444444448
