@@ -446,7 +446,7 @@ function shareholderReturns5(exitValue) {
     let prefBInvestorsTotalReturn = prefBInvestorsLiqPref + prefBInvestorsProRata;
     let prefCInvestorsTotalReturn = prefCInvestorsLiqPref + prefCInvestorsProRata;
     // Now, the option to convert to Common shares comes into play.
-    if (prefCInvestorsTotalReturn > (prefCInvestorsLiqPref * 2)) { // Has Series C reached cap? If so, so have B and A.
+    if (prefCInvestorsTotalReturn >= (prefCInvestorsLiqPref * 2)) { // Has Series C reached cap? If so, so have B and A.
         
         console.log('C reached cap');
         console.log('Which means B also reached cap');
@@ -491,7 +491,7 @@ function shareholderReturns5(exitValue) {
             let prefBInvestorsTotalReturnCommon = prefBInvestorsProRata;
 
             if (prefBInvestorsTotalReturnCommon >= prefBInvestorsTotalReturn) { // Would B earn more converting to common shares than taking double their preference?
-                console.log('B will convert to common shares, so ', prefBInvestorsTotalReturnCommon);
+                console.log('B will convert to common shares');
 
                 prefBInvestorsTotalReturn = prefBInvestorsTotalReturnCommon;
 
@@ -512,7 +512,7 @@ function shareholderReturns5(exitValue) {
                 let prefAInvestorsTotalReturnCommon = prefAInvestorsProRata;
 
                 if (prefAInvestorsTotalReturnCommon >= prefAInvestorsTotalReturn) { // Would A earn more converting to common shares than taking double their preference?
-                    console.log('A will convert to common shares, so ', prefAInvestorsTotalReturnCommon);
+                    console.log('A will convert to common shares');
     
                     prefAInvestorsTotalReturn = prefAInvestorsTotalReturnCommon;
                     remainder = remainder - prefAInvestorsTotalReturn;
@@ -522,34 +522,77 @@ function shareholderReturns5(exitValue) {
             }
 
         } else {
-            console.log('C will not convert to common shares because ', prefCInvestorsTotalReturnCommon, 'is not >= ', prefCInvestorsTotalReturn)
+            console.log('C will stick with 2x their pref since it is more than converting to common and earning ', prefCInvestorsTotalReturnCommon)
             //////////////
             // CHECK IF COMMON SHARES ARE WORTH MORE FOR B
-
             // caluclate the remainder to distribute among the others pro-rata
-            remainder = exitValue - prefCInvestorsLiqPref;
+            remainder = remainder - prefCInvestorsTotalReturn;
 
             // calculate pro rata amounts
-            foundersProRata = remainder * ownershipDistribution.founders;
             prefBInvestorsProRata = remainder * ownershipDistribution.prefBInvestors;
-            prefCInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
 
             // recalculate total return 
-            foundersTotalReturn = foundersLiqPref + foundersProRata;
             let prefBInvestorsTotalReturnCommon = prefBInvestorsProRata;
-            prefCInvestorsTotalReturn = prefCInvestorsLiqPref + prefCInvestorsProRata;
 
             ///////////
 
-            if (prefBInvestorsTotalReturnCommon > prefBInvestorsTotalReturn) { // Would B earn more converting to common shares than taking double their preference?
+            if (prefBInvestorsTotalReturnCommon >= prefBInvestorsTotalReturn) { // Would B earn more converting to common shares than taking double their preference?
                 console.log('B will convert to common shares');
 
                 prefBInvestorsTotalReturn = prefBInvestorsTotalReturnCommon;
 
+            } else {
+                console.log('B will stick with 2x their pref since it is more than converting to common and earning ', prefBInvestorsTotalReturnCommon);
+    
+                // CHECK IF COMMON SHARES ARE WORTH MORE FOR A
+    
+                // calculate new amount of shares
+                numOfShares = numOfShares - capTable[0].prefBInvestorsShares - capTable[0].prefCInvestorsShares;
+    
+                // caluclate the remainder to distribute among the others pro-rata
+                remainder = remainder - prefBInvestorsTotalReturn;
+    
+                // recalculate ownership distribution based off new amount of shares
+                ownershipDistribution.prefAInvestors = (capTable[0].prefAInvestorsShares / numOfShares);
+    
+                // calculate pro rata amounts
+                prefAInvestorsProRata = remainder * ownershipDistribution.prefAInvestors;
+    
+                // recalculate total return 
+                let prefAInvestorsTotalReturnCommon = prefAInvestorsProRata;
+    
+    
+                if (prefAInvestorsTotalReturnCommon >= prefAInvestorsTotalReturn) { // Would A earn more converting to common shares than taking double their preference?
+                    console.log('A will convert to common shares');
+    
+                    prefAInvestorsTotalReturn = prefAInvestorsTotalReturnCommon;
+                    foundersTotalReturn = exitValue - prefAInvestorsTotalReturn - prefBInvestorsTotalReturn - prefCInvestorsTotalReturn;
+    
+                } else {
+                    console.log('A will stick with 2x their pref since its more than converting to common and earning ', prefAInvestorsTotalReturnCommon);
+                    // calculate new amount of shares
+                    numOfShares = numOfShares - capTable[0].prefAInvestorsShares;
+    
+                    // recalculate ownership distribution based off new amount of shares
+                    ownershipDistribution.founders = (capTable[0].commonShares / numOfShares);
+                    ownershipDistribution.prefCInvestors = (capTable[0].prefCInvestorsShares / numOfShares);
+    
+                    // caluclate the remainder to distribute among the remaining groups pro-rata
+                    remainder = exitValue - prefAInvestorsTotalReturn - prefBInvestorsTotalReturn - prefCInvestorsLiqPref;
+    
+                    // calculate pro rata amounts for remaining groups
+                    foundersProRata = remainder * ownershipDistribution.founders;
+                    prefCInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
+    
+                    // recalculate total return for remaining groups
+                    foundersTotalReturn = foundersLiqPref + foundersProRata;
+                    prefCInvestorsTotalReturn = prefCInvestorsLiqPref + prefCInvestorsProRata;
+                }
+        
             }
         }
             
-    } else if (prefBInvestorsTotalReturn > (prefBInvestorsLiqPref * 2)) { // Has Series B reached cap? If so, so has A.
+    } else if (prefBInvestorsTotalReturn >= (prefBInvestorsLiqPref * 2)) { // Has Series B reached cap? If so, so has A.
 
         console.log('C didnt reach cap... but B reached cap');
         console.log('Which means A also reached cap');
@@ -576,17 +619,16 @@ function shareholderReturns5(exitValue) {
 
         ///////////
 
-        if (prefBInvestorsTotalReturnCommon > prefBInvestorsTotalReturn) { // Would B earn more converting to common shares than taking double their preference?
+        if (prefBInvestorsTotalReturnCommon >= prefBInvestorsTotalReturn) { // Would B earn more converting to common shares than taking double their preference?
             console.log('B will convert to common shares');
 
             prefBInvestorsTotalReturn = prefBInvestorsTotalReturnCommon;
 
         } else {
-            console.log('B will stick with 2x their pref since its more than converting to common and earning ', prefBInvestorsTotalReturnCommon);
+            console.log('B will stick with 2x their pref since it is more than converting to common and earning ', prefBInvestorsTotalReturnCommon);
 
-            //////////////
-            // CHECK IF COMMON SHARES IS WORTH MORE FOR A
-            // PRETEND ONLY B REACHED CAP TO GET CS VALUE
+            // CHECK IF COMMON SHARES ARE WORTH MORE FOR A
+
             // calculate new amount of shares
             numOfShares = numOfShares - capTable[0].prefBInvestorsShares;
 
@@ -594,30 +636,25 @@ function shareholderReturns5(exitValue) {
             remainder = exitValue - prefBInvestorsTotalReturn - prefCInvestorsLiqPref;
 
             // recalculate ownership distribution based off new amount of shares
-            ownershipDistribution.founders = (capTable[0].commonShares / numOfShares);
             ownershipDistribution.prefAInvestors = (capTable[0].prefAInvestorsShares / numOfShares);
-            ownershipDistribution.prefCInvestors = (capTable[0].prefCInvestorsShares / numOfShares);
 
             // calculate pro rata amounts
-            foundersProRata = remainder * ownershipDistribution.founders;
             prefAInvestorsProRata = remainder * ownershipDistribution.prefAInvestors;
-            prefCInvestorsProRata = remainder * ownershipDistribution.prefCInvestors;
 
             // recalculate total return 
-            foundersTotalReturn = foundersLiqPref + foundersProRata;
             let prefAInvestorsTotalReturnCommon = prefAInvestorsProRata;
-            prefCInvestorsTotalReturn = prefCInvestorsLiqPref + prefCInvestorsProRata;
 
-            ///////////
 
             if (prefAInvestorsTotalReturnCommon > prefAInvestorsTotalReturn) { // Would A earn more converting to common shares than taking double their preference?
-                console.log('Only A will convert to common shares');
+                console.log(' A will convert to common shares');
 
                 prefAInvestorsTotalReturn = prefAInvestorsTotalReturnCommon;
 
             } else {
+                console.log('A will stick with 2x their pref since its more than converting to common and earning ', prefAInvestorsTotalReturnCommon);
                 // calculate new amount of shares
-                numOfShares = numOfShares - capTable[0].prefBInvestorsShares - capTable[0].prefAInvestorsShares;
+                numOfShares = numOfShares - capTable[0].prefAInvestorsShares;
+                console.log(numOfShares, ' should be 2.5m');
 
                 // recalculate ownership distribution based off new amount of shares
                 ownershipDistribution.founders = (capTable[0].commonShares / numOfShares);
@@ -637,7 +674,7 @@ function shareholderReturns5(exitValue) {
     
         }
 
-    } else if (prefAInvestorsTotalReturn > (prefAInvestorsLiqPref * 2)) { // Has Series A reached cap?
+    } else if (prefAInvestorsTotalReturn >= (prefAInvestorsLiqPref * 2)) { // Has Series A reached cap?
 
         console.log('C and B didnt reach cap... Only A reached cap');
 
@@ -679,7 +716,7 @@ function shareholderReturns5(exitValue) {
 console.log('------------------');
 console.log('Stage 5');
 console.log('------------------');
-shareholderReturns5(45000000);
+shareholderReturns5(39000000);
 // shareholderReturns5(50000000);
 // shareholderReturns5(70000000);
 console.log('\n');
