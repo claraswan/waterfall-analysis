@@ -3,6 +3,8 @@
 // CHALLENGE: 
 // Write a function that takes an exit value (in €) as input and outputs the return for each shareholder. 
 
+// Cap Table
+
 const capTable = [
 
     {'commonShares' : 1000000,
@@ -17,13 +19,6 @@ const capTable = [
     
 ]
 
-const ownershipDistribution = {
-    'founders' : (capTable[0].commonShares / numOfShares),
-    'prefAInvestors' : (capTable[0].prefAInvestorsShares / numOfShares),
-    'prefBInvestors' : (capTable[0].prefBInvestorsShares / numOfShares),
-    'prefCInvestors' : (capTable[0].prefCInvestorsShares / numOfShares)
-};
-
 // liquidation preference calculations
 const foundersLiqPref = 0;
 const prefAInvestorsLiqPref = capTable[1].prefAInvestorsInvested;
@@ -36,9 +31,16 @@ function shareholderReturns(exitValue) {
 
     console.log('Exit value: €', exitValue );
 
-    // Cap Table and Ownership Distribution figures
+    // Ownership Distribution figures
 
     let numOfShares = 3000000;
+
+    const ownershipDistribution = {
+        'founders' : (capTable[0].commonShares / numOfShares),
+        'prefAInvestors' : (capTable[0].prefAInvestorsShares / numOfShares),
+        'prefBInvestors' : (capTable[0].prefBInvestorsShares / numOfShares),
+        'prefCInvestors' : (capTable[0].prefCInvestorsShares / numOfShares)
+    };
 
     // remainder calculation
     let remainder = exitValue - prefAInvestorsLiqPref - prefBInvestorsLiqPref - prefCInvestorsLiqPref;
@@ -367,6 +369,10 @@ function shareholderReturns(exitValue) {
     console.log('Preferred A Investors: €', prefAInvestorsTotalReturn);
     console.log('Preferred B Investors: €', prefBInvestorsTotalReturn);
     console.log('Preferred C Investors: €', prefCInvestorsTotalReturn);
+
+    // Return these variables for testing purposes
+
+    return [foundersTotalReturn, prefAInvestorsTotalReturn, prefBInvestorsTotalReturn, prefCInvestorsTotalReturn];
     
 }
 
@@ -465,3 +471,5 @@ shareholderReturns(44000000);
 console.log('\n');
 console.log('---');
 shareholderReturns(47000000);
+
+module.exports = shareholderReturns;

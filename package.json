@@ -1,0 +1,22 @@
+{
+  "name": "waterfall-analysis",
+  "version": "1.0.0",
+  "description": "## Introduction and explanations",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claraswan/waterfall-analysis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/claraswan/waterfall-analysis/issues"
+  },
+  "homepage": "https://github.com/claraswan/waterfall-analysis#readme",
+  "devDependencies": {
+    "jest": "^29.0.3"
+  }
+}
