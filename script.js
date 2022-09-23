@@ -470,6 +470,6 @@ console.log('---');
 shareholderReturns(44000000);
 console.log('\n');
 console.log('---');
-shareholderReturns(47000000);
+shareholderReturns(47000000); // at this exit value, C reaches cap not initially but after all calculations are done... not sure if this is allowed?
 
 module.exports = shareholderReturns;
